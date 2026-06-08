@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="700" math="0" shadow="0">
+  <root>
+    <mxCell id="0" /><mxCell id="1" parent="0" />
+    <mxCell id="title" value="UC01–UC03: Tài Khoản" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=15;fontStyle=1;fontColor=#1a3a5c;" vertex="1" parent="1">
+      <mxGeometry x="200" y="20" width="600" height="36" as="geometry" />
+    </mxCell>
+    <!-- System boundary -->
+    <mxCell id="sys" value="Hệ Thống Quản Lý Thư Viện Số" style="swimlane;startSize=30;fillColor=none;strokeColor=#1a3a5c;strokeWidth=2;fontStyle=1;fontSize=12;fontColor=#1a3a5c;" vertex="1" parent="1">
+      <mxGeometry x="250" y="70" width="500" height="540" as="geometry" />
+    </mxCell>
+    <!-- UC01 -->
+    <mxCell id="uc01" value="UC01&#xa;Đăng ký tài khoản" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#1a3a5c;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="310" y="130" width="180" height="70" as="geometry" />
+    </mxCell>
+    <!-- UC02 -->
+    <mxCell id="uc02" value="UC02&#xa;Đăng nhập hệ thống" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#1a3a5c;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="310" y="280" width="180" height="70" as="geometry" />
+    </mxCell>
+    <!-- UC03 -->
+    <mxCell id="uc03" value="UC03&#xa;Đổi mật khẩu" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#1a3a5c;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="310" y="430" width="180" height="70" as="geometry" />
+    </mxCell>
+    <!-- Actor Admin -->
+    <mxCell id="admin" value="Admin" style="shape=mxgraph.flowchart.actor;fillColor=#dae8fc;strokeColor=#1a3a5c;strokeWidth=2;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="100" y="260" width="60" height="80" as="geometry" />
+    </mxCell>
+    <!-- Actor Reader -->
+    <mxCell id="reader" value="Độc Giả" style="shape=mxgraph.flowchart.actor;fillColor=#d5e8d4;strokeColor=#1a3a5c;strokeWidth=2;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="840" y="260" width="60" height="80" as="geometry" />
+    </mxCell>
+    <!-- Edges Admin -->
+    <mxCell id="e1001" edge="1" source="admin" target="uc02" parent="1" style="edgeStyle=orthogonalEdgeStyle;"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e1002" edge="1" source="admin" target="uc03" parent="1" style="edgeStyle=orthogonalEdgeStyle;"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <!-- Edges Reader -->
+    <mxCell id="e1003" edge="1" source="reader" target="uc01" parent="1" style="edgeStyle=orthogonalEdgeStyle;"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e1004" edge="1" source="reader" target="uc02" parent="1" style="edgeStyle=orthogonalEdgeStyle;"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e1005" edge="1" source="reader" target="uc03" parent="1" style="edgeStyle=orthogonalEdgeStyle;"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <!-- Legend -->
+    <mxCell id="l1" value="" style="ellipse;fillColor=#d5e8d4;strokeColor=#1a3a5c;" vertex="1" parent="1"><mxGeometry x="110" y="440" width="25" height="18" as="geometry"/></mxCell>
+    <mxCell id="l1t" value="Chỉ Độc giả" style="text;fontSize=10;" vertex="1" parent="1"><mxGeometry x="140" y="440" width="100" height="18" as="geometry"/></mxCell>
+    <mxCell id="l2" value="" style="ellipse;fillColor=#fff2cc;strokeColor=#1a3a5c;" vertex="1" parent="1"><mxGeometry x="110" y="465" width="25" height="18" as="geometry"/></mxCell>
+    <mxCell id="l2t" value="Admin &amp; Độc giả" style="text;fontSize=10;" vertex="1" parent="1"><mxGeometry x="140" y="465" width="110" height="18" as="geometry"/></mxCell>
+  </root>
+</mxGraphModel>

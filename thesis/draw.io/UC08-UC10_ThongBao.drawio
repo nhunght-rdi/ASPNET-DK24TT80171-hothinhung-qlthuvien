@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1150" pageHeight="820" math="0" shadow="0">
+  <root>
+    <mxCell id="0" /><mxCell id="1" parent="0" />
+    <mxCell id="title" value="UC08–UC10: Thông Báo (Navbar Bell)" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=15;fontStyle=1;fontColor=#1a3a5c;" vertex="1" parent="1">
+      <mxGeometry x="200" y="20" width="750" height="36" as="geometry" />
+    </mxCell>
+    <mxCell id="sys" value="Hệ Thống Quản Lý Thư Viện Số" style="swimlane;startSize=30;fillColor=none;strokeColor=#1a3a5c;strokeWidth=2;fontStyle=1;fontSize=12;fontColor=#1a3a5c;" vertex="1" parent="1">
+      <mxGeometry x="220" y="80" width="700" height="660" as="geometry" />
+    </mxCell>
+    <!-- UC08 -->
+    <mxCell id="uc08" value="UC08&#xa;Thông báo hệ thống (Admin)&#xa;Icon chuông navbar dropdown" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#1a3a5c;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="280" y="150" width="220" height="90" as="geometry" />
+    </mxCell>
+    <!-- UC08a -->
+    <mxCell id="uc08a" value="UC08a&#xa;Cảnh báo phiếu&#xa;sắp đến hạn (≤ 3 ngày)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#1a3a5c;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="560" y="130" width="200" height="80" as="geometry" />
+    </mxCell>
+    <!-- UC08b -->
+    <mxCell id="uc08b" value="UC08b&#xa;Cảnh báo phiếu&#xa;quá hạn" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#1a3a5c;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="560" y="240" width="200" height="80" as="geometry" />
+    </mxCell>
+    <!-- UC08c -->
+    <mxCell id="uc08c" value="UC08c&#xa;Cảnh báo vi phạm&#xa;chưa xử lý" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#1a3a5c;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="560" y="350" width="200" height="80" as="geometry" />
+    </mxCell>
+    <!-- UC10 -->
+    <mxCell id="uc10" value="UC10&#xa;Thông báo cá nhân (Độc giả)&#xa;Icon chuông navbar dropdown" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#1a3a5c;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="280" y="490" width="220" height="90" as="geometry" />
+    </mxCell>
+    <!-- UC10a -->
+    <mxCell id="uc10a" value="UC10a&#xa;Thông báo sách&#xa;sắp đến hạn trả (≤ 3 ngày)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#1a3a5c;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="560" y="470" width="200" height="80" as="geometry" />
+    </mxCell>
+    <!-- UC10b -->
+    <mxCell id="uc10b" value="UC10b&#xa;Thông báo sách&#xa;đã quá hạn trả" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#1a3a5c;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="560" y="570" width="200" height="80" as="geometry" />
+    </mxCell>
+    <!-- Actor Admin -->
+    <mxCell id="admin" value="Admin" style="shape=mxgraph.flowchart.actor;fillColor=#dae8fc;strokeColor=#1a3a5c;strokeWidth=2;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="60" y="170" width="60" height="80" as="geometry" />
+    </mxCell>
+    <!-- Actor Reader -->
+    <mxCell id="reader" value="Độc Giả" style="shape=mxgraph.flowchart.actor;fillColor=#d5e8d4;strokeColor=#1a3a5c;strokeWidth=2;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="60" y="510" width="60" height="80" as="geometry" />
+    </mxCell>
+    <!-- include UC08 -->
+    <mxCell id="r1" value="«include»" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;fontSize=10;fontStyle=2;" edge="1" source="uc08" target="uc08a" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="r2" value="«include»" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;fontSize=10;fontStyle=2;" edge="1" source="uc08" target="uc08b" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="r3" value="«include»" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;fontSize=10;fontStyle=2;" edge="1" source="uc08" target="uc08c" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <!-- include UC10 -->
+    <mxCell id="r4" value="«include»" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;fontSize=10;fontStyle=2;" edge="1" source="uc10" target="uc10a" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="r5" value="«include»" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;fontSize=10;fontStyle=2;" edge="1" source="uc10" target="uc10b" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <!-- Edges -->
+    <mxCell id="e1001" edge="1" source="admin" target="uc08" parent="1" style="edgeStyle=orthogonalEdgeStyle;"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e1002" edge="1" source="reader" target="uc10" parent="1" style="edgeStyle=orthogonalEdgeStyle;"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <!-- Legend -->
+    <mxCell id="l1" value="" style="ellipse;fillColor=#dae8fc;strokeColor=#1a3a5c;" vertex="1" parent="1"><mxGeometry x="80" y="640" width="25" height="18" as="geometry"/></mxCell>
+    <mxCell id="l1t" value="Chỉ Admin" style="text;fontSize=10;" vertex="1" parent="1"><mxGeometry x="110" y="640" width="90" height="18" as="geometry"/></mxCell>
+    <mxCell id="l2" value="" style="ellipse;fillColor=#d5e8d4;strokeColor=#1a3a5c;" vertex="1" parent="1"><mxGeometry x="80" y="663" width="25" height="18" as="geometry"/></mxCell>
+    <mxCell id="l2t" value="Chỉ Độc giả" style="text;fontSize=10;" vertex="1" parent="1"><mxGeometry x="110" y="663" width="90" height="18" as="geometry"/></mxCell>
+    <mxCell id="l3" value="" style="ellipse;fillColor=#ffe6cc;strokeColor=#1a3a5c;" vertex="1" parent="1"><mxGeometry x="80" y="686" width="25" height="18" as="geometry"/></mxCell>
+    <mxCell id="l3t" value="Hệ thống tự động" style="text;fontSize=10;" vertex="1" parent="1"><mxGeometry x="110" y="686" width="120" height="18" as="geometry"/></mxCell>
+  </root>
+</mxGraphModel>
