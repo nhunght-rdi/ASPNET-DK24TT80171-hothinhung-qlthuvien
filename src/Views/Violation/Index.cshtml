@@ -1,0 +1,31 @@
+@model IEnumerable<ThuVienSo.Data.Violation>
+@{ ViewData["Title"] = "Quản Lý Vi Phạm"; }
+<div class="page-header"><div class="container"><h1><i class="fas fa-exclamation-triangle me-2" style="color:#ffc107"></i>Quản Lý Vi Phạm</h1></div></div>
+<div class="container py-4">
+  <div class="d-flex gap-2 mb-3 flex-wrap">
+    <a asp-action="Index" class="btn btn-sm @(ViewBag.Status==null?"btn-primary":"btn-outline-secondary")">Tất cả</a>
+    <a asp-action="Index" asp-route-status="ChuaXuLy" class="btn btn-sm @(ViewBag.Status=="ChuaXuLy"?"btn-warning":"btn-outline-secondary")">Chưa xử lý</a>
+    <a asp-action="Index" asp-route-status="DaXuLy" class="btn btn-sm @(ViewBag.Status=="DaXuLy"?"btn-success":"btn-outline-secondary")">Đã xử lý</a>
+  </div>
+  <div class="table-responsive"><table class="table table-hover">
+    <thead><tr><th>Độc Giả</th><th>BookId</th><th>Vi Phạm</th><th>Hình Thức Phạt</th><th>Tiền Phạt</th><th>Ngày</th><th>Trạng Thái</th><th>Thao Tác</th></tr></thead>
+    <tbody>
+      @foreach (var v in Model)
+      {
+        <tr>
+          <td><strong>@v.User?.FullName</strong><br><small class="text-muted">@v.UserId</small></td>
+          <td><code style="font-size:.78rem;">@v.BookId</code></td>
+          <td style="font-size:.85rem;">@v.ViolationName</td>
+          <td><span class="badge @(v.PenaltyType=="CanhCao"?"bg-warning text-dark":v.PenaltyType=="KhoaTK"?"bg-danger":v.PenaltyType=="DenTien"?"bg-info":"bg-secondary")">
+            @(v.PenaltyType=="CanhCao"?"Cảnh cáo":v.PenaltyType=="KhoaTK"?"Khóa TK":v.PenaltyType=="DenTien"?"Đền tiền":"Đền sách")
+          </span></td>
+          <td>@(v.PenaltyAmount.HasValue?v.PenaltyAmount.Value.ToString("N0")+" đ":"—")</td>
+          <td style="font-size:.82rem;">@v.ViolationDate.ToString("dd/MM/yyyy")</td>
+          <td><span class="badge-status @(v.Status=="DaXuLy"?"status-hoatdong":"status-chuaxuly")" style="font-size:.72rem;">@(v.Status=="DaXuLy"?"Đã xử lý":"Chưa xử lý")</span></td>
+          <td>@if(v.Status=="ChuaXuLy"){<form method="post" asp-action="Resolve" asp-route-id="@v.ViolationId"><button class="btn btn-sm btn-success" onclick="return confirm('Xác nhận đã xử lý?')"><i class="fas fa-check me-1"></i>Xử lý</button></form>}else{<span class="text-muted small">—</span>}</td>
+        </tr>
+      }
+      @if (!Model.Any()) { <tr><td colspan="8" class="text-center text-muted py-4">Không có vi phạm nào.</td></tr> }
+    </tbody>
+  </table></div>
+</div>

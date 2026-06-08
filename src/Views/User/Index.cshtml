@@ -1,0 +1,50 @@
+@model IEnumerable<ThuVienSo.Data.User>
+@{ ViewData["Title"] = "Quản Lý Độc Giả"; }
+<div class="page-header"><div class="container"><h1><i class="fas fa-users me-2" style="color:var(--gold-light)"></i>Quản Lý Độc Giả</h1><p class="mb-0">Tổng: @Model.Count() độc giả</p></div></div>
+<div class="container py-4">
+  <div class="card mb-3"><div class="card-body">
+    <form method="get" class="row g-2 align-items-end">
+      <div class="col-md-6"><label class="form-label">Tìm kiếm</label><input name="search" type="text" class="form-control" placeholder="Họ tên, email, UserId..." value="@ViewBag.Search" /></div>
+      <div class="col-md-6 d-flex gap-2">
+        <button class="btn btn-primary"><i class="fas fa-search me-1"></i>Tìm</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Xoá</a>
+        <a asp-action="Create" class="btn btn-success ms-auto"><i class="fas fa-user-plus me-1"></i>Thêm Mới</a>
+      </div>
+    </form>
+  </div></div>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead><tr><th>UserId</th><th>Họ Tên</th><th>Email</th><th>SĐT</th><th>Ngày ĐK</th><th>Vi Phạm</th><th>Trạng Thái</th><th>Thao Tác</th></tr></thead>
+      <tbody>
+        @foreach (var u in Model)
+        {
+          <tr>
+            <td><code style="font-size:.8rem;">@u.UserId</code></td>
+            <td><strong>@u.FullName</strong></td>
+            <td style="font-size:.85rem;">@u.Email</td>
+            <td>@u.PhoneNumber</td>
+            <td style="font-size:.82rem;">@u.RegisterDate.ToString("dd/MM/yyyy")</td>
+            <td>@if (u.ViolationCount > 0) { <span class="badge bg-danger">@u.ViolationCount lần</span> } else { <span class="text-muted">—</span> }</td>
+            <td>
+              <span class="badge-status @(u.Status == "Active" ? "status-hoatdong" : "status-bikhoa")">
+                @(u.Status == "Active" ? "Hoạt động" : "Bị khóa")
+              </span>
+            </td>
+            <td><div class="d-flex gap-1">
+              <a asp-action="Details" asp-route-id="@u.UserId" class="btn btn-sm btn-info text-white"><i class="fas fa-eye"></i></a>
+              <a asp-action="Edit" asp-route-id="@u.UserId" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
+              <form method="post" asp-action="ToggleLock" asp-route-id="@u.UserId">
+                <button class="btn btn-sm @(u.Status=="Active"?"btn-secondary":"btn-success")" onclick="return confirm('Xác nhận thay đổi trạng thái?')">
+                  <i class="fas @(u.Status=="Active"?"fa-lock":"fa-unlock")"></i>
+                </button>
+              </form>
+              <form method="post" asp-action="Delete" asp-route-id="@u.UserId">
+                <button class="btn btn-sm btn-danger" onclick="return confirm('Xóa độc giả này?')"><i class="fas fa-trash"></i></button>
+              </form>
+            </div></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

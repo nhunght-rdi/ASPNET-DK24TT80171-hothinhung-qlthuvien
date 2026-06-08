@@ -1,0 +1,235 @@
+@inject ThuVienSo.Data.AppDbContext _db
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Thư Viện Số TVU</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
+            <div class="brand-icon"><i class="fas fa-book-open"></i></div>
+            <div>
+                <div class="brand-title">Thư Viện Số</div>
+                <div class="brand-sub">Trường Đại Học Trà Vinh</div>
+            </div>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Home" asp-action="Index"><i class="fas fa-home me-1"></i>Trang Chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Book" asp-action="Index"><i class="fas fa-book me-1"></i>Sách</a>
+                </li>
+                @if (Context.Session.GetString("Role") == "Admin")
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"><i class="fas fa-cog me-1"></i>Quản Lý</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" asp-controller="Book" asp-action="Create"><i class="fas fa-plus-circle me-2 text-success"></i>Thêm Sách</a></li>
+                            <li><a class="dropdown-item" asp-controller="User" asp-action="Index"><i class="fas fa-users me-2 text-primary"></i>Độc Giả</a></li>
+                            <li><a class="dropdown-item" asp-controller="Borrow" asp-action="Index"><i class="fas fa-exchange-alt me-2 text-warning"></i>Mượn Trả</a></li>
+                            <li><a class="dropdown-item" asp-controller="Borrow" asp-action="Create"><i class="fas fa-file-alt me-2 text-info"></i>Tạo Phiếu Mượn</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" asp-controller="Violation" asp-action="Index"><i class="fas fa-exclamation-triangle me-2 text-danger"></i>Vi Phạm</a></li>
+                            <li><a class="dropdown-item" asp-controller="Borrow" asp-action="DueSoon"><i class="fas fa-bell me-2 text-warning"></i>Thông Báo Hạn</a></li>
+                        </ul>
+                    </li>
+                }
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                @if (!string.IsNullOrEmpty(Context.Session.GetString("UserId")))
+                {
+                    if (Context.Session.GetString("Role") == "Admin")
+                    {
+                       
+                            var soSapHetHan = _db.BorrowRecords.Count(br => br.Status == "DangMuon" && br.DueDate <= DateTime.Today.AddDays(3));
+                            var soQuaHan    = _db.BorrowRecords.Count(br => br.Status == "QuaHan");
+                            var soViPham    = _db.Violations.Count(v => v.Status == "ChuaXuLy");
+                            var tongCanhBao = soSapHetHan + soQuaHan + soViPham;
+                        
+                        <li class="nav-item dropdown">
+                            <a class="nav-link position-relative px-2" href="#" data-bs-toggle="dropdown" title="Thông báo">
+                                <i class="fas fa-bell" style="font-size:1.1rem;"></i>
+                                @if (tongCanhBao > 0)
+                                {
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:.6rem;">@tongCanhBao</span>
+                                }
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" style="min-width:270px;">
+                                <li><h6 class="dropdown-header"><i class="fas fa-bell me-1"></i>Cảnh Báo Hệ Thống</h6></li>
+                                @if (soSapHetHan > 0)
+                                {
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center gap-2" asp-controller="Borrow" asp-action="DueSoon">
+                                            <i class="fas fa-clock text-warning"></i>
+                                            <span>@soSapHetHan phiếu sắp hết hạn (≤ 3 ngày)</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (soQuaHan > 0)
+                                {
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center gap-2" asp-controller="Borrow" asp-action="Index" asp-route-status="QuaHan">
+                                            <i class="fas fa-exclamation-circle text-danger"></i>
+                                            <span>@soQuaHan phiếu quá hạn</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (soViPham > 0)
+                                {
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center gap-2" asp-controller="Violation" asp-action="Index">
+                                            <i class="fas fa-exclamation-triangle text-danger"></i>
+                                            <span>@soViPham vi phạm chưa xử lý</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (tongCanhBao == 0)
+                                {
+                                    <li><span class="dropdown-item text-muted small"><i class="fas fa-check-circle me-1 text-success"></i>Không có cảnh báo</span></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                       
+                            var userId = Context.Session.GetString("UserId") ?? "";
+                            var sachSapHetHan = _db.BorrowRecords.Count(br => br.UserId == userId && br.Status == "DangMuon" && br.DueDate <= DateTime.Today.AddDays(3));
+                            var sachQuaHan    = _db.BorrowRecords.Count(br => br.UserId == userId && br.Status == "QuaHan");
+                            var viPhamCuaToi  = _db.Violations.Count(v => v.UserId == userId && v.Status == "ChuaXuLy");
+                            var tongThongBao  = sachSapHetHan + sachQuaHan + viPhamCuaToi;
+                        
+                        <li class="nav-item dropdown">
+                            <a class="nav-link position-relative px-2" href="#" data-bs-toggle="dropdown" title="Thông báo">
+                                <i class="fas fa-bell" style="font-size:1.1rem;"></i>
+                                @if (tongThongBao > 0)
+                                {
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:.6rem;">@tongThongBao</span>
+                                }
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" style="min-width:270px;">
+                                <li><h6 class="dropdown-header"><i class="fas fa-bell me-1"></i>Thông Báo Của Tôi</h6></li>
+                                @if (sachSapHetHan > 0)
+                                {
+                                    <li>
+                                        <span class="dropdown-item d-flex align-items-center gap-2">
+                                            <i class="fas fa-clock text-warning"></i>
+                                            <span>@sachSapHetHan sách sắp đến hạn trả (≤ 3 ngày)</span>
+                                        </span>
+                                    </li>
+                                }
+                                @if (sachQuaHan > 0)
+                                {
+                                    <li>
+                                        <span class="dropdown-item d-flex align-items-center gap-2">
+                                            <i class="fas fa-exclamation-circle text-danger"></i>
+                                            <span>@sachQuaHan sách đã quá hạn trả</span>
+                                        </span>
+                                    </li>
+                                }
+                                @if (viPhamCuaToi > 0)
+                                {
+                                    <li>
+                                        <span class="dropdown-item d-flex align-items-center gap-2">
+                                            <i class="fas fa-exclamation-triangle text-danger"></i>
+                                            <span>@viPhamCuaToi vi phạm chưa được xử lý</span>
+                                        </span>
+                                    </li>
+                                }
+                                @if (tongThongBao == 0)
+                                {
+                                    <li><span class="dropdown-item text-muted small"><i class="fas fa-check-circle me-1 text-success"></i>Bạn không có thông báo mới</span></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                }
+                @if (!string.IsNullOrEmpty(Context.Session.GetString("UserId")))
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" data-bs-toggle="dropdown">
+                            <div class="avatar-sm"><i class="fas fa-user"></i></div>
+                            <span>@Context.Session.GetString("FullName")</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" asp-controller="Account" asp-action="DoiMatKhau"><i class="fas fa-key me-2"></i>Đổi Mật Khẩu</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" asp-controller="Account" asp-action="DangXuat"><i class="fas fa-sign-out-alt me-2"></i>Đăng Xuất</a></li>
+                        </ul>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="DangNhap"><i class="fas fa-sign-in-alt me-1"></i>Đăng Nhập</a></li>
+                    <li class="nav-item"><a class="btn btn-accent ms-2" asp-controller="Account" asp-action="DangKy">Đăng Ký</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="main-content">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-toast alert-toast-success" id="toastMsg">
+            <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+        </div>
+    }
+    @if (TempData["Warning"] != null)
+    {
+        <div class="alert-toast alert-toast-warning" id="toastMsg2">
+            <i class="fas fa-exclamation-triangle me-2"></i>@TempData["Warning"]
+        </div>
+    }
+    @RenderBody()
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5><i class="fas fa-book-open me-2"></i>Thư Viện Số TVU</h5>
+                <p class="text-muted small">Trường Đại Học Trà Vinh — Hệ thống quản lý thư viện số hiện đại.</p>
+            </div>
+            <div class="col-md-4">
+                <h6>Liên kết nhanh</h6>
+                <ul class="list-unstyled small">
+                    <li><a href="/" class="footer-link">Trang chủ</a></li>
+                    <li><a asp-controller="Book" asp-action="Index" class="footer-link">Danh mục sách</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h6>Liên hệ</h6>
+                <p class="text-muted small"><i class="fas fa-map-marker-alt me-1"></i> 126 Nguyễn Thiện Thành, Trà Vinh</p>
+                <p class="text-muted small"><i class="fas fa-envelope me-1"></i> thuvien@tvu.edu.vn</p>
+            </div>
+        </div>
+        <hr>
+        <p class="text-center text-muted small mb-0">© 2026 Thư Viện Số — Trường Đại Học Trà Vinh</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js"></script>
+@await RenderSectionAsync("Scripts", required: false)
+<script>
+    document.querySelectorAll('.alert-toast').forEach(t => {
+        if(t) setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(),400); }, 4000);
+    });
+</script>
+</body>
+</html>

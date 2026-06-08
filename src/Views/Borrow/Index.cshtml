@@ -1,0 +1,94 @@
+@model IEnumerable<ThuVienSo.Data.BorrowRecord>
+@{ ViewData["Title"] = "Quản Lý Mượn Trả"; }
+<div class="page-header"><div class="container">
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+    <div><h1><i class="fas fa-exchange-alt me-2" style="color:var(--gold-light)"></i>Quản Lý Mượn Trả</h1><p class="mb-0">Tổng: @Model.Count() phiếu mượn</p></div>
+    <div class="d-flex gap-2 align-items-center">
+      @if (ViewBag.DueSoon > 0) { <a asp-action="DueSoon" class="btn btn-warning position-relative"><i class="fas fa-bell me-1"></i>Sắp hết hạn<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">@ViewBag.DueSoon</span></a> }
+      <a asp-action="Create" class="btn btn-success"><i class="fas fa-plus me-1"></i>Tạo Phiếu</a>
+    </div>
+  </div>
+</div></div>
+<div class="container py-4">
+  <form method="get" asp-action="Index" class="mb-3">
+    <input type="hidden" name="status" value="@ViewBag.Status" />
+    <div class="row g-2">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+        <input type="text" name="searchName" value="@ViewBag.SearchName" class="form-control form-control-sm" placeholder="Họ tên người mượn" />
+      </div>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+        <input type="text" name="searchPhone" value="@ViewBag.SearchPhone" class="form-control form-control-sm" placeholder="Số điện thoại" />
+      </div>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+        <input type="text" name="searchBookTitle" value="@ViewBag.SearchBookTitle" class="form-control form-control-sm" placeholder="Tên sách" />
+      </div>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+        <input type="text" name="searchBookId" value="@ViewBag.SearchBookId" class="form-control form-control-sm" placeholder="Mã sách" />
+      </div>
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+        <input type="date" name="fromDate" value="@ViewBag.FromDate" class="form-control form-control-sm" title="Ngày mượn từ" />
+      </div>
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+        <input type="date" name="toDate" value="@ViewBag.ToDate" class="form-control form-control-sm" title="Ngày mượn đến" />
+      </div>
+      <div class="col-12 col-sm-4 col-md-2 col-lg-auto d-flex gap-1">
+        <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-search me-1"></i>Lọc</button>
+        <a asp-action="Index" asp-route-status="@ViewBag.Status" class="btn btn-sm btn-outline-secondary"><i class="fas fa-times me-1"></i>Xoá</a>
+      </div>
+    </div>
+  </form>
+  <div class="d-flex gap-2 mb-3 flex-wrap">
+    @foreach (var (val,label) in new[]{("","Tất cả"),("DangMuon","Đang mượn"),("QuaHan","Quá hạn"),("DaTraDung","Trả đúng hạn"),("DaTraMuon","Trả muộn")})
+    { <a asp-action="Index" asp-route-status="@val" class="btn btn-sm @(ViewBag.Status==val||(string.IsNullOrEmpty(val)&&ViewBag.Status==null)?"btn-primary":"btn-outline-secondary")">@label</a> }
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead><tr><th>BorrowId</th><th>Sách</th><th>Độc Giả</th><th>Người Tạo</th><th>Ngày Mượn</th><th>Hạn Trả</th><th>Ngày Trả</th><th>Trạng Thái</th><th>Thao Tác</th></tr></thead>
+      <tbody>
+        @foreach (var br in Model)
+        {
+          <tr class="@(br.Status=="QuaHan"?"table-danger":"")">
+            <td><code style="font-size:.78rem;">@br.BorrowId</code></td>
+            <td style="font-size:.85rem;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">@br.Book?.BookTitle</td>
+            <td style="font-size:.85rem;">@br.User?.FullName</td>
+            <td style="font-size:.8rem;color:#6c757d;">@(br.CreatedBy ?? "—")</td>
+            <td style="font-size:.82rem;">@br.BorrowDate.ToString("dd/MM/yy")</td>
+            <td style="font-size:.82rem;" class="@(br.DueDate<DateTime.Today&&br.Status=="DangMuon"?"text-danger fw-bold":"")">@br.DueDate.ToString("dd/MM/yy")</td>
+            <td style="font-size:.82rem;">@(br.ReturnDate.HasValue?br.ReturnDate.Value.ToString("dd/MM/yy"):"—")</td>
+            <td><span class="badge-status status-@br.Status.ToLower()" style="font-size:.72rem;">@(br.Status=="DangMuon"?"Đang mượn":br.Status=="DaTraDung"?"Trả đúng hạn":br.Status=="DaTraMuon"?"Trả muộn":"Quá hạn")</span></td>
+            <td><div class="d-flex gap-1">
+              @if (br.Status=="DangMuon"||br.Status=="QuaHan")
+              { <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modal_@br.BorrowId"><i class="fas fa-undo me-1"></i>Xử lý trả</button> }
+              <form method="post" asp-action="Delete" asp-route-id="@br.BorrowId"><button class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa phiếu này?')"><i class="fas fa-trash"></i></button></form>
+            </div></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+@foreach (var br in Model.Where(x=>x.Status=="DangMuon"||x.Status=="QuaHan"))
+{
+  <div class="modal fade" id="modal_@br.BorrowId" tabindex="-1">
+    <div class="modal-dialog"><div class="modal-content">
+      <div class="modal-header" style="background:var(--navy);color:#fff;"><h5 class="modal-title"><i class="fas fa-undo me-2"></i>Xử Lý Trả Sách</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+      <form method="post" asp-action="ProcessReturn"><div class="modal-body">
+        <input type="hidden" name="borrowId" value="@br.BorrowId" />
+        <p><strong>Sách:</strong> @br.Book?.BookTitle</p>
+        <p><strong>Độc giả:</strong> @br.User?.FullName</p>
+        <p><strong>Hạn trả:</strong> <span class="@(br.DueDate<DateTime.Today?"text-danger fw-bold":"")">@br.DueDate.ToString("dd/MM/yyyy")</span></p>
+        @if (br.DueDate < DateTime.Today) { <div class="alert alert-warning py-2 small"><i class="fas fa-exclamation-triangle me-1"></i>Quá hạn @((DateTime.Today-br.DueDate).Days) ngày!</div> }
+        <div class="mb-3"><label class="form-label fw-bold">Tình trạng sách khi trả</label>
+          <select name="bookCondition" class="form-select">
+            <option value="Good">Bình thường</option>
+            <option value="Torn">Bị rách (phạt 50% giá trị)</option>
+            <option value="Wet">Bị ướt (phạt 30% giá trị)</option>
+            <option value="Lost">Bị mất (phạt 100% giá trị)</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Huỷ</button><button type="submit" class="btn btn-primary"><i class="fas fa-check me-1"></i>Xác Nhận Trả</button></div>
+      </form>
+    </div></div>
+  </div>
+}

@@ -1,0 +1,126 @@
+@model IEnumerable<ThuVienSo.Data.Book>
+@{ ViewData["Title"] = "Trang Chủ"; }
+
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7">
+        <div class="mb-3">
+          <span style="background:rgba(201,146,42,.2);color:#e8b84b;padding:.3rem .8rem;border-radius:20px;font-size:.82rem;font-weight:600;">
+            <i class="fas fa-star me-1"></i> THƯ VIỆN ĐẠI HỌC TRÀ VINH
+          </span>
+        </div>
+        <h1 class="hero-title mb-3">Khám Phá Kho Tàng<br><span style="color:var(--gold-light)">Tri Thức</span> Của Bạn</h1>
+        <p class="hero-sub mb-4">Hàng ngàn đầu sách đa dạng — văn học, khoa học, kỹ năng sống — sẵn sàng cho bạn khám phá và mượn đọc.</p>
+        <div class="d-flex gap-3 flex-wrap">
+          <a asp-controller="Book" asp-action="Index" class="btn btn-accent px-4 py-2">
+            <i class="fas fa-search me-2"></i>Tìm Kiếm Sách
+          </a>
+          @if (string.IsNullOrEmpty(Context.Session.GetString("UserId")))
+          {
+            <a asp-controller="Account" asp-action="DangKy" class="btn btn-outline-light px-4 py-2">
+              <i class="fas fa-user-plus me-2"></i>Đăng Ký Ngay
+            </a>
+          }
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="row g-3 hero-stats">
+          <div class="col-6"><div class="stat-box"><div class="stat-num">@ViewBag.TotalBooks</div><div class="stat-label"><i class="fas fa-book me-1"></i>Đầu Sách</div></div></div>
+          <div class="col-6"><div class="stat-box"><div class="stat-num">@ViewBag.TotalUsers</div><div class="stat-label"><i class="fas fa-users me-1"></i>Độc Giả</div></div></div>
+          <div class="col-6"><div class="stat-box"><div class="stat-num">@ViewBag.Borrowing</div><div class="stat-label"><i class="fas fa-exchange-alt me-1"></i>Đang Mượn</div></div></div>
+          <div class="col-6"><div class="stat-box"><div class="stat-num">@((ViewBag.Categories as IEnumerable<Category>)?.Count() ?? 0)</div><div class="stat-label"><i class="fas fa-tags me-1"></i>Thể Loại</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="search-bar-wrap">
+    <form method="get" class="row g-2 align-items-end">
+      <div class="col-md-6">
+        <label class="form-label">Tìm kiếm sách</label>
+        <div class="input-group">
+          <span class="input-group-text" style="background:var(--warm-gray);border-right:none;"><i class="fas fa-search text-muted"></i></span>
+          <input name="search" type="text" class="form-control" placeholder="Tên sách, tác giả, thể loại..." value="@ViewBag.Search" style="border-left:none;" />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Thể loại</label>
+        <select name="category" class="form-select">
+          <option value="">-- Tất cả --</option>
+          @foreach (var cat in (ViewBag.Categories as IEnumerable<Category> ?? Enumerable.Empty<Category>()))
+          {
+            <option value="@cat.CategoryName" selected="@(ViewBag.SelectedCategory == cat.CategoryName ? "selected" : null)">@cat.CategoryName</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-3 d-flex gap-2">
+        <button type="submit" class="btn btn-primary flex-fill"><i class="fas fa-search me-1"></i>Tìm</button>
+        <a href="/" class="btn btn-outline-secondary"><i class="fas fa-redo"></i></a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="section-title">@(string.IsNullOrEmpty(ViewBag.Search as string) && string.IsNullOrEmpty(ViewBag.SelectedCategory as string) ? "Sách Nổi Bật" : "Kết Quả Tìm Kiếm")</h2>
+    <span class="text-muted small">@Model.Count() đầu sách</span>
+  </div>
+
+  @if (!Model.Any())
+  {
+    <div class="text-center py-5"><i class="fas fa-book-open fa-4x text-muted mb-3"></i><p class="text-muted">Không tìm thấy sách phù hợp.</p><a href="/" class="btn btn-primary">Xem tất cả sách</a></div>
+  }
+  else
+  {
+    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3">
+      @foreach (var book in Model.Take(20))
+      {
+        <div class="col">
+          <div class="book-card card h-100">
+            <div class="book-cover">
+              @if (!string.IsNullOrEmpty(book.CoverImage)) { <img src="@book.CoverImage" alt="@book.BookTitle" /> }
+              else { <i class="fas fa-book no-img"></i> }
+              @if (book.Quantity <= 0) { <span class="book-badge bg-danger text-white">Hết sách</span> }
+              else if (book.Quantity <= 2) { <span class="book-badge bg-warning text-dark">Sắp hết</span> }
+            </div>
+            <div class="card-body d-flex flex-column">
+              <div class="book-title mb-1">@book.BookTitle</div>
+              <div class="book-author mb-1">@book.Author</div>
+              <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
+                <small class="text-muted"><i class="fas fa-layer-group me-1"></i>@book.Quantity quyển</small>
+                <a asp-controller="Book" asp-action="Details" asp-route-id="@book.BookId" class="btn btn-sm btn-outline-primary">Chi tiết</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+    <div class="text-center mt-4">
+      <a asp-controller="Book" asp-action="Index" class="btn btn-outline-primary px-5"><i class="fas fa-th-list me-2"></i>Xem Tất Cả Sách</a>
+    </div>
+  }
+</div>
+
+<section style="background:var(--warm-gray); padding:3rem 0;">
+  <div class="container">
+    <h2 class="section-title mb-4">Thể Loại Sách</h2>
+    <div class="row g-3">
+      @foreach (var cat in (ViewBag.Categories as IEnumerable<Category> ?? Enumerable.Empty<Category>()))
+      {
+        <div class="col-6 col-md-4 col-lg-2">
+          <a asp-controller="Home" asp-action="Index" asp-route-category="@cat.CategoryName"
+             class="d-block text-center p-3 rounded-3 text-decoration-none"
+             style="background:#fff;transition:.2s;box-shadow:0 2px 8px rgba(0,0,0,.06);"
+             onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+            <div style="font-size:1.6rem;margin-bottom:.4rem;">@(new[]{"📚","📖","💰","🧠","🔬","🗺️"}[cat.CategoryId % 6])</div>
+            <div style="font-size:.82rem;font-weight:600;color:var(--navy);">@cat.CategoryName</div>
+          </a>
+        </div>
+      }
+    </div>
+  </div>
+</section>

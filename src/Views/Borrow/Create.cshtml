@@ -1,0 +1,48 @@
+@model ThuVienSo.Data.BorrowRecord
+@{ ViewData["Title"] = "Tạo Phiếu Mượn"; }
+
+<div class="page-header"><div class="container"><h1><i class="fas fa-file-alt me-2" style="color:var(--gold-light)"></i>Tạo Phiếu Mượn Sách</h1></div></div>
+<div class="container py-4"><div class="row justify-content-center"><div class="col-lg-7">
+  <div class="card"><div class="card-header"><h5 class="mb-0">Thông Tin Phiếu Mượn</h5></div><div class="card-body">
+    <form method="post" asp-action="Create">
+      <div class="row g-3">
+
+        <div class="col-12">
+          <label class="form-label text-muted small mb-1"><i class="fas fa-user-shield me-1"></i>Người Tạo Phiếu</label>
+          <input type="text" class="form-control" value="@ViewBag.CreatedBy" readonly style="background:#f8f9fa;font-weight:500;" />
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Chọn Sách <span class="text-danger">*</span></label>
+          <select asp-for="BookId" asp-items="ViewBag.Books" class="form-select" required>
+            <option value="">-- Chọn sách --</option>
+          </select>
+          <span asp-validation-for="BookId" class="text-danger small"></span>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Chọn Độc Giả <span class="text-danger">*</span></label>
+          <select asp-for="UserId" asp-items="ViewBag.Users" class="form-select" required>
+            <option value="">-- Chọn độc giả --</option>
+          </select>
+          <span asp-validation-for="UserId" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Ngày Mượn</label>
+          <input type="date" class="form-control" value="@DateTime.Today.ToString("yyyy-MM-dd")" readonly style="background:#f5f5f5" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Ngày Hẹn Trả <span class="text-danger">*</span></label>
+          <input asp-for="DueDate" type="date" class="form-control" min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" value="@DateTime.Today.AddDays(14).ToString("yyyy-MM-dd")" required />
+        </div>
+
+        <div class="col-12"><div class="alert alert-info py-2 small"><i class="fas fa-info-circle me-1"></i>Thời hạn mượn mặc định là <strong>14 ngày</strong>.</div></div>
+        <div class="col-12 d-flex gap-2">
+          <button type="submit" class="btn btn-success"><i class="fas fa-save me-1"></i>Tạo Phiếu</button>
+          <a asp-action="Index" class="btn btn-outline-secondary">Huỷ</a>
+        </div>
+      </div>
+    </form>
+  </div></div>
+</div></div></div>

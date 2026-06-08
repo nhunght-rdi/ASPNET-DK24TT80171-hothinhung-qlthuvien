@@ -1,0 +1,20 @@
+@model ThuVienSo.Data.User
+@{ ViewData["Title"] = "Thêm Độc Giả"; }
+<div class="page-header"><div class="container"><h1><i class="fas fa-user-plus me-2" style="color:var(--gold-light)"></i>Thêm Độc Giả Mới</h1></div></div>
+<div class="container py-4"><div class="row justify-content-center"><div class="col-lg-7">
+  <div class="card"><div class="card-header"><h5>Thông Tin Độc Giả</h5></div><div class="card-body">
+    <form method="post" asp-action="Create">
+      <div class="row g-3">
+        <div class="col-12"><label class="form-label">Họ và Tên <span class="text-danger">*</span></label><input asp-for="FullName" class="form-control" required /></div>
+        <div class="col-12"><label class="form-label">Email <span class="text-danger">*</span></label><input asp-for="Email" type="email" class="form-control" required /></div>
+        <div class="col-md-6"><label class="form-label">Số Điện Thoại</label><input asp-for="PhoneNumber" class="form-control" /></div>
+        <div class="col-md-6"><label class="form-label">Trạng Thái</label>
+          <select asp-for="Status" class="form-select"><option value="Active">Hoạt động</option><option value="Locked">Bị khóa</option></select>
+        </div>
+        <div class="col-12"><label class="form-label">Địa Chỉ</label><input asp-for="Address" class="form-control" /></div>
+        <div class="col-12"><label class="form-label">Mật Khẩu <span class="text-danger">*</span></label><input asp-for="Password" type="password" class="form-control" required /></div>
+        <div class="col-12 d-flex gap-2"><button type="submit" class="btn btn-success"><i class="fas fa-save me-1"></i>Lưu</button><a asp-action="Index" class="btn btn-outline-secondary">Huỷ</a></div>
+      </div>
+    </form>
+  </div></div>
+</div></div></div>

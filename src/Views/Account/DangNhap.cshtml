@@ -1,0 +1,43 @@
+@{ ViewData["Title"] = "Đăng Nhập"; Layout = "_Layout"; }
+
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo"><i class="fas fa-book-open"></i></div>
+    <h2 class="auth-title mb-1">Đăng Nhập</h2>
+    <p class="text-center text-muted small mb-4">Chào mừng trở lại Thư Viện Số TVU</p>
+
+    @if (ViewBag.Error != null)
+    {
+      <div class="alert alert-danger py-2 small"><i class="fas fa-exclamation-circle me-1"></i>@ViewBag.Error</div>
+    }
+    @if (TempData["Success"] != null)
+    {
+      <div class="alert alert-success py-2 small"><i class="fas fa-check-circle me-1"></i>@TempData["Success"]</div>
+    }
+
+    <form method="post" asp-action="DangNhap">
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="fas fa-envelope text-muted"></i></span>
+          <input name="email" type="email" class="form-control" placeholder="email@example.com" required />
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="form-label">Mật khẩu</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="fas fa-lock text-muted"></i></span>
+           <input name="password" type="password" class="form-control" placeholder="••••••••" required />
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary w-100 py-2">
+        <i class="fas fa-sign-in-alt me-2"></i>Đăng Nhập
+      </button>
+    </form>
+
+    <hr class="my-3">
+    <p class="text-center small mb-0">
+      Chưa có tài khoản? <a asp-action="DangKy" style="color:var(--navy);font-weight:600;">Đăng ký ngay</a>
+    </p>
+  </div>
+</div>

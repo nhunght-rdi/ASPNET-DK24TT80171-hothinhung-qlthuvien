@@ -1,0 +1,55 @@
+@model IEnumerable<ThuVienSo.Data.Book>
+@{ ViewData["Title"] = "Danh Mục Sách"; }
+<div class="page-header"><div class="container"><h1><i class="fas fa-book me-2" style="color:var(--gold-light)"></i>Danh Mục Sách</h1></div></div>
+<div class="container pb-5">
+  <div class="card mb-4"><div class="card-body">
+    <form method="get" class="row g-2 align-items-end">
+      <div class="col-md-5"><label class="form-label">Tìm kiếm</label><input name="search" type="text" class="form-control" placeholder="Tên sách, tác giả, NXB..." value="@ViewBag.Search" /></div>
+      <div class="col-md-3"><label class="form-label">Thể loại</label>
+                    <select name="categoryId" asp-items="ViewBag.Categories" class="form-select">
+                        <option value="">-- Tất cả --</option>
+       
+        </select>
+      </div>
+      <div class="col-md-4 d-flex gap-2">
+        <button class="btn btn-primary flex-fill"><i class="fas fa-search me-1"></i>Tìm</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Xoá</a>
+        @if (Context.Session.GetString("Role") == "Admin") { <a asp-action="Create" class="btn btn-success"><i class="fas fa-plus"></i></a> }
+      </div>
+    </form>
+  </div></div>
+  <p class="text-muted small mb-3">Tìm thấy <strong>@Model.Count()</strong> đầu sách</p>
+  @if (!Model.Any())
+  { <div class="text-center py-5 card"><div class="card-body"><i class="fas fa-search fa-3x text-muted mb-3"></i><p class="text-muted">Không tìm thấy sách phù hợp.</p></div></div> }
+  else
+  {
+    <div class="row g-3">
+      @foreach (var b in Model)
+      {
+        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+          <div class="book-card card h-100">
+            <div class="book-cover">
+              @if (!string.IsNullOrEmpty(b.CoverImage)) { <img src="@b.CoverImage" alt="@b.BookTitle" /> } else { <i class="fas fa-book no-img"></i> }
+              @if (b.Quantity <= 0) { <span class="book-badge bg-danger text-white">Hết</span> }
+            </div>
+            <div class="card-body d-flex flex-column p-2">
+              <div class="book-title mb-1" style="font-size:.88rem;">@b.BookTitle</div>
+              <div class="book-author mb-1" style="font-size:.76rem;">@b.Author</div>
+              <div class="text-muted" style="font-size:.75rem;"><i class="fas fa-tags me-1"></i>@b.Category?.CategoryName</div>
+              <div class="mt-auto pt-2 d-flex gap-1 flex-wrap">
+                <a asp-action="Details" asp-route-id="@b.BookId" class="btn btn-sm btn-outline-primary flex-fill" style="font-size:.75rem;">Chi tiết</a>
+                @if (Context.Session.GetString("Role") == "Admin")
+                {
+                  <a asp-action="Edit" asp-route-id="@b.BookId" class="btn btn-sm btn-warning" style="font-size:.75rem;"><i class="fas fa-edit"></i></a>
+                  <form method="post" asp-action="Delete" asp-route-id="@b.BookId" class="d-inline">
+                    <button class="btn btn-sm btn-danger" style="font-size:.75rem;" onclick="return confirm('Xóa sách này?')"><i class="fas fa-trash"></i></button>
+                  </form>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

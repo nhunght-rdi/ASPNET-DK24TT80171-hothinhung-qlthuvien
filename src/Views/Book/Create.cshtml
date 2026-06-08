@@ -1,0 +1,22 @@
+@model ThuVienSo.Data.Book
+@{ ViewData["Title"] = "Thêm Sách Mới"; }
+<div class="page-header"><div class="container"><h1><i class="fas fa-plus-circle me-2" style="color:var(--gold-light)"></i>Thêm Sách Mới</h1></div></div>
+<div class="container py-4"><div class="row justify-content-center"><div class="col-lg-8">
+  <div class="card"><div class="card-header"><h5>Thông Tin Sách</h5></div><div class="card-body">
+    <form method="post" enctype="multipart/form-data" asp-action="Create">
+      <div class="row g-3">
+        <div class="col-md-6"><label class="form-label">BookId <span class="text-danger">*</span></label><input asp-for="BookId" class="form-control" placeholder="VD: VH001" required /></div>
+        <div class="col-md-6"><label class="form-label">Thể Loại</label><select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select"><option value="">-- Chọn --</option></select></div>
+        <div class="col-12"><label class="form-label">Tên Sách <span class="text-danger">*</span></label><input asp-for="BookTitle" class="form-control" required /></div>
+        <div class="col-md-6"><label class="form-label">Tác Giả</label><input asp-for="Author" class="form-control" /></div>
+        <div class="col-md-6"><label class="form-label">Nhà Xuất Bản</label><input asp-for="Publisher" class="form-control" /></div>
+        <div class="col-md-4"><label class="form-label">Số Lượng</label><input asp-for="Quantity" type="number" class="form-control" min="0" /></div>
+        <div class="col-md-4"><label class="form-label">Giá (đồng)</label><input asp-for="Price" type="number" class="form-control" min="0" /></div>
+        <div class="col-md-4"><label class="form-label">Tình Trạng</label><select asp-for="Status" class="form-select"><option>Còn sách</option><option>Hết sách</option></select></div>
+        <div class="col-12"><label class="form-label">Mô Tả</label><textarea asp-for="Description" class="form-control" rows="3"></textarea></div>
+        <div class="col-12"><label class="form-label">Ảnh Bìa</label><input name="coverImage" type="file" class="form-control" accept="image/*" /></div>
+        <div class="col-12 d-flex gap-2"><button type="submit" class="btn btn-success"><i class="fas fa-save me-1"></i>Lưu</button><a asp-action="Index" class="btn btn-outline-secondary">Huỷ</a></div>
+      </div>
+    </form>
+  </div></div>
+</div></div></div>

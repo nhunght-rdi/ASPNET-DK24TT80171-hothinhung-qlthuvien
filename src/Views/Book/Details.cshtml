@@ -1,0 +1,37 @@
+@model ThuVienSo.Data.Book
+@{ ViewData["Title"] = Model.BookTitle; }
+<div class="page-header"><div class="container"><h1 style="font-size:1.8rem;">@Model.BookTitle</h1></div></div>
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-md-3"><div class="card">
+      <div class="book-cover" style="height:280px;border-radius:12px 12px 0 0;">
+        @if (!string.IsNullOrEmpty(Model.CoverImage)) { <img src="@Model.CoverImage" alt="@Model.BookTitle" style="width:100%;height:100%;object-fit:cover;" /> }
+        else { <i class="fas fa-book" style="font-size:4rem;color:#ccc;"></i> }
+      </div>
+      <div class="card-body text-center">
+        @if (Model.Quantity > 0) { <span class="badge-status status-hoatdong">Còn @Model.Quantity quyển</span> }
+        else { <span class="badge-status status-bikhoa">Hết sách</span> }
+      </div>
+    </div></div>
+    <div class="col-md-9"><div class="card h-100"><div class="card-body">
+      <h2 style="font-family:'Playfair Display',serif;">@Model.BookTitle</h2>
+      <table class="table table-borderless" style="font-size:.9rem;">
+        <tr><th class="text-muted" style="width:160px;">Tác giả</th><td>@(Model.Author ?? "—")</td></tr>
+        <tr><th class="text-muted">Thể loại</th><td><span class="badge bg-primary">@(Model.Category?.CategoryName ?? "—")</span></td></tr>
+        <tr><th class="text-muted">Nhà xuất bản</th><td>@(Model.Publisher ?? "—")</td></tr>
+        <tr><th class="text-muted">Số lượng</th><td>@Model.Quantity quyển</td></tr>
+        <tr><th class="text-muted">Giá trị</th><td style="color:var(--gold);font-weight:700;">@Model.Price.ToString("N0") đ</td></tr>
+        <tr><th class="text-muted">Mã sách (BookId)</th><td><code>@Model.BookId</code></td></tr>
+      </table>
+      @if (!string.IsNullOrEmpty(Model.Description)) { <hr><h6 class="fw-bold">Mô tả</h6><p>@Model.Description</p> }
+      <div class="d-flex gap-2 mt-3">
+        <a asp-action="Index" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i>Quay lại</a>
+        @if (Context.Session.GetString("Role") == "Admin")
+        {
+          <a asp-action="Edit" asp-route-id="@Model.BookId" class="btn btn-warning"><i class="fas fa-edit me-1"></i>Sửa</a>
+          <a asp-controller="Borrow" asp-action="Create" class="btn btn-primary"><i class="fas fa-file-alt me-1"></i>Tạo phiếu mượn</a>
+        }
+      </div>
+    </div></div></div>
+  </div>
+</div>

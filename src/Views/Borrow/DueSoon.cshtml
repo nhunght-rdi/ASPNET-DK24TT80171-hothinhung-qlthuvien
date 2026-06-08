@@ -1,0 +1,28 @@
+@model IEnumerable<ThuVienSo.Data.BorrowRecord>
+@{ ViewData["Title"] = "Thông Báo Hạn Mượn"; }
+<div class="page-header"><div class="container"><h1><i class="fas fa-bell me-2" style="color:var(--gold-light)"></i>Thông Báo Sắp Đến Hạn / Quá Hạn</h1></div></div>
+<div class="container py-4">
+  @if (!Model.Any()) { <div class="card"><div class="card-body text-center py-5"><i class="fas fa-check-circle fa-4x text-success mb-3"></i><h5>Tất cả ổn!</h5><p class="text-muted">Không có phiếu nào sắp hết hạn.</p><a asp-action="Index" class="btn btn-primary">Quay lại</a></div></div> }
+  else
+  {
+    <div class="alert alert-warning"><i class="fas fa-exclamation-triangle me-2"></i>Có <strong>@Model.Count()</strong> phiếu mượn cần chú ý!</div>
+    <div class="table-responsive"><table class="table table-hover">
+      <thead><tr><th>Độc Giả</th><th>Email / SĐT</th><th>Sách</th><th>Ngày Mượn</th><th>Hạn Trả</th><th>Còn lại</th></tr></thead>
+      <tbody>
+        @foreach (var br in Model)
+        {
+          var days = (br.DueDate - DateTime.Today).Days;
+          <tr class="@(days<0?"table-danger":days==0?"table-warning":"")">
+            <td><strong>@br.User?.FullName</strong></td>
+            <td style="font-size:.82rem;"><div>@br.User?.Email</div><div class="text-muted">@br.User?.PhoneNumber</div></td>
+            <td style="font-size:.85rem;">@br.Book?.BookTitle</td>
+            <td style="font-size:.82rem;">@br.BorrowDate.ToString("dd/MM/yyyy")</td>
+            <td class="fw-bold @(days<0?"text-danger":days==0?"text-warning":"")">@br.DueDate.ToString("dd/MM/yyyy")</td>
+            <td>@if(days<0){<span class="badge bg-danger">Quá @(-days) ngày</span>}else if(days==0){<span class="badge bg-warning text-dark">Hôm nay!</span>}else{<span class="badge bg-info">@days ngày</span>}</td>
+          </tr>
+        }
+      </tbody>
+    </table></div>
+    <a asp-action="Index" class="btn btn-outline-secondary mt-3"><i class="fas fa-arrow-left me-1"></i>Quay lại</a>
+  }
+</div>
