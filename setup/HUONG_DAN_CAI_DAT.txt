@@ -1,0 +1,18 @@
+HƯỚNG DẪN CÀI ĐẶT - HỆ THỐNG QUẢN LÝ THƯ VIỆN SỐ
+
+Yêu cầu: .NET 8 SDK, SQL Server, Visual Studio 2022
+
+Bước 1. Mở file setup/create_database.sql chạy trên SQL Server để tạo cơ sở dữ liệu
+
+Bước 2. Mở file src/appsettings.json, sửa lại chuỗi kết nối (Server, Database) cho phù hợp với máy tính của bạn
+
+Bước 3. Mở file src/ThuVienSo.sln bằng Visual Studio, nhấn F5 để chạy ứng dụng
+         Hoặc chạy lệnh: cd src -> dotnet run
+
+Bước 4. Mở trình duyệt truy cập http://localhost:5000
+
+Bước 5. Đăng nhập bằng tài khoản Admin mặc định:
+         Email: admin@tvu.edu.vn
+         Mật khẩu: Admin@123
+
+Bước 6. Độc giả tự đăng ký tài khoản tại trang Đăng Ký trên thanh điều hướng
